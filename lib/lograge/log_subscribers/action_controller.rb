@@ -8,12 +8,12 @@ module Lograge
       end
 
       def redirect_to(event)
-        RequestStore.store[:lograge_location] = event.payload[:location]
+        Lograge::Current.lograge_location = event.payload[:location]
       end
 
       def unpermitted_parameters(event)
-        RequestStore.store[:lograge_unpermitted_params] ||= []
-        RequestStore.store[:lograge_unpermitted_params].concat(event.payload[:keys])
+        Lograge::Current.lograge_unpermitted_params ||= []
+        Lograge::Current.lograge_unpermitted_params.concat(event.payload[:keys])
       end
 
       private
@@ -56,18 +56,18 @@ module Lograge
       end
 
       def extract_location
-        location = RequestStore.store[:lograge_location]
+        location = Lograge::Current.lograge_location
         return {} unless location
 
-        RequestStore.store[:lograge_location] = nil
+        Lograge::Current.lograge_location = nil
         { location: strip_query_string(location) }
       end
 
       def extract_unpermitted_params
-        unpermitted_params = RequestStore.store[:lograge_unpermitted_params]
+        unpermitted_params = Lograge::Current.lograge_unpermitted_params
         return {} unless unpermitted_params
 
-        RequestStore.store[:lograge_unpermitted_params] = nil
+        Lograge::Current.lograge_unpermitted_params = nil
         { unpermitted_params: unpermitted_params }
       end
     end
