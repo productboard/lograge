@@ -20,12 +20,17 @@ require 'lograge/ordered_options'
 require 'active_support'
 require 'active_support/core_ext/module/attribute_accessors'
 require 'active_support/core_ext/string/inflections'
+require 'active_support/current_attributes'
 
 # rubocop:disable Metrics/ModuleLength
 module Lograge
   module_function
 
   mattr_accessor :logger, :application, :ignore_tests
+
+  class Current < ActiveSupport::CurrentAttributes
+    attribute :lograge_location, :lograge_unpermitted_params
+  end
 
   # Custom options that will be appended to log line
   #
